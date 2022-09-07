@@ -59,24 +59,26 @@ class Inventory {
 public:
 	Inventory() {
 		std::ifstream file(filename);
-		std::string buf;
-		std::vector<std::string> line;
-		while (!file.eof()) {
-			getline(file, buf);
-			if (!buf.empty()) {
-				int it;
-				while (buf.find(';') != std::string::npos) {
-					it = buf.find(';');
-					line.push_back(buf.substr(0, it));
-					buf = buf.substr(it + 1);
+		if (file.is_open()) {
+			std::string buf;
+			std::vector<std::string> line;
+			while (!file.eof()) {
+				getline(file, buf);
+				if (!buf.empty()) {
+					int it;
+					while (buf.find(';') != std::string::npos) {
+						it = buf.find(';');
+						line.push_back(buf.substr(0, it));
+						buf = buf.substr(it + 1);
+					}
+					list.push_back({ line[0], stoi(line[1]), myClasses::Date(line[2]), stof(buf) });
+					line.clear();
 				}
-				list.push_back({ line[0], stoi(line[1]), myClasses::Date(line[2]), stof(buf) });
-				line.clear();
 			}
+			file.close();
+			std::cout << "Inventory is loaded.";
+			Sleep(800);
 		}
-		file.close();
-		std::cout << "Inventory is loaded.";
-		Sleep(800);
 	}
 
 	~Inventory() {
