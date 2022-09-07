@@ -162,14 +162,15 @@ public:
 		std::cout << "\t* Redact menu *" << std::endl;
 		std::cout << "Enter the name of the product: ";
 		getline(std::cin, name);
-		Product product = searchByName(name);
+		Product& product = searchByName(name);
 
 		Cursor cursor(1, 5);
 		while (!(cursor.isPressed() && cursor.position() == 5)) {
 			mark.changePosition(cursor.position());
 			system("cls");
-			std::cout << "\t* Redact menu *" << std::endl;
-			std::cout << "What to redact?" << std::endl;
+			std::cout << "\t* Redact menu *" << std::endl << std::endl;
+			std::cout << "    " << product << std::endl << std::endl;
+			std::cout << "    What to redact?" << std::endl;
 			mark(std::cout, 1) << "1. Name;" << std::endl;
 			mark(std::cout, 2) << "2. Amount;" << std::endl;
 			mark(std::cout, 3) << "3. Date of receipt;" << std::endl;
@@ -194,14 +195,16 @@ public:
 				case 5:
 					break;
 				}
-				cursor.position() = 5;
+				if (cursor.position() != 5) {
+					system("cls");
+					std::cout << "Data redacted." << std::endl;
+					Sleep(1000);
+					if (inventory.getList().size() > 1)
+						sortMenu();
+					cursor.position() = 5;
+				}
 			}
 		}
-		system("cls");
-		std::cout << "Data redacted." << std::endl;
-		Sleep(1000);
-		if (inventory.getList().size() > 1)
-			sortMenu();
 	}
 
 	void redactName(Product& product) {
